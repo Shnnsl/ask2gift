@@ -52,7 +52,7 @@ export function Footer() {
       </div>
       <div className="border-t border-slate-200/80">
         <div className="container-shell flex flex-col gap-2 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>&copy; {new Date().getFullYear()} Ask2Gift. Created by Nesil Sahin.</span>
+          <span>&copy; 2026 Ask2Gift. All Rights Reserved.</span>
           <span>Thoughtful gift ideas for public-beta exploration.</span>
         </div>
       </div>

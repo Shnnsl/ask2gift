@@ -83,6 +83,7 @@ data/
 docs/
 lib/
 public/
+tests/
 types/
 ```
 
@@ -127,6 +128,12 @@ npm run typecheck
 
 ```bash
 npm run lint
+```
+
+### Tests
+
+```bash
+npm test
 ```
 
 ## Usage
@@ -195,8 +202,6 @@ Support: [support@ask2gift.com](mailto:support@ask2gift.com)
 
 ## License
 
-A license decision is still pending.
+Ask2Gift is proprietary software and is released under an All Rights Reserved license.
 
-Without a license, standard copyright protection applies and others do not automatically receive broad permission to reuse the code.
-
-If you later choose the MIT License, it would generally allow reuse, modification, and distribution as long as the copyright notice and license text are preserved.
+This repository is public for educational, evaluation, and portfolio viewing only. No permission is granted to copy, modify, distribute, sublicense, publish, sell, or use this software, in whole or in part, without prior written permission from Nesil Sahin.
