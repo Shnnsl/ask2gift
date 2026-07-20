@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getAffiliateDisclosureText,
+  getAmazonAssociateDisclosureText,
+  shouldShowAmazonAssociateDisclosure
+} from "@/lib/affiliate";
 import { readResultsFeedback, readStoredQuizAnswers, writeResultsFeedback } from "@/lib/storage";
 import type { QuizAnswers, RecommendationResult } from "@/types/gift";
 import { RecommendationCard } from "@/components/results/RecommendationCard";
@@ -53,6 +58,18 @@ export function ResultsClient() {
 
     void loadRecommendations();
   }, []);
+
+  const uniqueResults = useMemo(() => {
+    const seen = new Set<string>();
+    return results.filter((recommendation) => {
+      if (seen.has(recommendation.id)) {
+        return false;
+      }
+
+      seen.add(recommendation.id);
+      return true;
+    });
+  }, [results]);
 
   if (loading) {
     return (
@@ -136,9 +153,23 @@ export function ResultsClient() {
           </div>
         </div>
 
+        {uniqueResults.length > 0 ? (
+          <div className="mt-8 rounded-[2rem] border border-coral/15 bg-white/90 p-5 shadow-soft sm:p-6">
+            <p className="text-sm font-semibold text-ink">
+              {shouldShowAmazonAssociateDisclosure() ? getAmazonAssociateDisclosureText() : getAffiliateDisclosureText()}
+            </p>
+            <p className="mt-2 text-sm text-slate-600">Affiliate links may earn Ask2Gift a commission at no additional cost to you.</p>
+          </div>
+        ) : null}
+
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
-          {results.map((recommendation, index) => (
-            <RecommendationCard key={recommendation.id} recommendation={recommendation} isTopResult={index === 0} />
+          {uniqueResults.map((recommendation, index) => (
+            <RecommendationCard
+              key={recommendation.id}
+              recommendation={recommendation}
+              answers={answers}
+              isTopResult={index === 0}
+            />
           ))}
         </div>
 
@@ -160,7 +191,7 @@ export function ResultsClient() {
           </div>
         ) : null}
 
-        {results.length === 0 && !error ? (
+        {uniqueResults.length === 0 && !error ? (
           <div className="mt-8 surface max-w-3xl p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">No strong matches yet</h2>
             <p className="mt-3">
@@ -174,7 +205,7 @@ export function ResultsClient() {
           </div>
         ) : null}
 
-        {results.length > 0 && !error ? (
+        {uniqueResults.length > 0 && !error ? (
           <div className="mt-8 surface max-w-3xl p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">Were these recommendations helpful?</h2>
             <p className="mt-3 text-sm text-slate-600">

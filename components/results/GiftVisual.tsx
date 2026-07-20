@@ -80,7 +80,7 @@ export function GiftVisual({ title, category, imageUrl, link, compact = false }:
               {title}
             </p>
             <p className="mt-2 max-w-[18rem] text-sm text-white/85">
-              {showImage ? "Click to view gift" : "Image unavailable, but the gift details are still ready to open."}
+              {showImage ? "Gift idea preview" : "Image unavailable, but the gift details are still ready to explore."}
             </p>
           </div>
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/30 bg-white/20 text-lg font-semibold text-white backdrop-blur-sm">

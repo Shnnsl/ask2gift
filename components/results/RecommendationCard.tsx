@@ -1,10 +1,16 @@
 import { FavoriteButton } from "@/components/results/FavoriteButton";
 import { GiftVisual } from "@/components/results/GiftVisual";
-import { buildOutboundProductUrl, getOutboundLinkRel } from "@/lib/affiliate";
-import type { RecommendationResult } from "@/types/gift";
+import {
+  buildAmazonSearchQuery,
+  buildAmazonSearchUrl,
+  getAmazonAffiliateLinkRel,
+  getAmazonBudgetMessage
+} from "@/lib/affiliate";
+import type { QuizAnswers, RecommendationResult } from "@/types/gift";
 
 interface RecommendationCardProps {
   recommendation: RecommendationResult;
+  answers: QuizAnswers;
   isTopResult?: boolean;
 }
 
@@ -24,19 +30,16 @@ function getMatchLabel(score: number) {
   return { label: "Match", tone: "bg-slate-100 text-slate-600" };
 }
 
-export function RecommendationCard({ recommendation, isTopResult = false }: RecommendationCardProps) {
+export function RecommendationCard({ recommendation, answers, isTopResult = false }: RecommendationCardProps) {
   const match = getMatchLabel(recommendation.score);
-  const viewGiftUrl = buildOutboundProductUrl(recommendation.link);
+  const amazonSearchQuery = buildAmazonSearchQuery(recommendation, answers);
+  const amazonUrl = buildAmazonSearchUrl(amazonSearchQuery);
+  const budgetMessage = getAmazonBudgetMessage(answers.budget, recommendation.priceRange);
 
   return (
     <article className="result-card p-4 sm:p-5">
       <div className="relative">
-        <GiftVisual
-          title={recommendation.title}
-          category={recommendation.category}
-          imageUrl={recommendation.imageUrl}
-          link={viewGiftUrl ?? undefined}
-        />
+        <GiftVisual title={recommendation.title} category={recommendation.category} imageUrl={recommendation.imageUrl} />
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">
           {isTopResult ? (
             <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-spruce shadow-sm">
@@ -66,6 +69,7 @@ export function RecommendationCard({ recommendation, isTopResult = false }: Reco
         <div className="mt-5 rounded-[1.75rem] bg-slate-50 p-4">
           <p className="text-sm font-semibold text-ink">Why it matches</p>
           <p className="mt-2 text-sm text-slate-600">{recommendation.whyItFits}</p>
+          {budgetMessage ? <p className="mt-3 text-sm text-slate-600">Budget fit: {budgetMessage}</p> : null}
           {recommendation.matchReasons.length > 0 ? (
             <ul className="mt-3 space-y-2 text-sm text-slate-600">
               {recommendation.matchReasons.slice(0, 3).map((reason) => (
@@ -79,17 +83,24 @@ export function RecommendationCard({ recommendation, isTopResult = false }: Reco
         </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-          {viewGiftUrl ? (
-            <a href={viewGiftUrl} target="_blank" rel={getOutboundLinkRel()} className="button-primary w-full sm:w-auto">
-              View Gift
+          {amazonUrl ? (
+            <a
+              href={amazonUrl}
+              target="_blank"
+              rel={getAmazonAffiliateLinkRel()}
+              className="button-primary w-full sm:w-auto"
+              aria-label={`View ${recommendation.title} on Amazon in a new tab`}
+            >
+              View on Amazon
             </a>
           ) : (
             <span className="inline-flex w-full items-center justify-center rounded-full bg-slate-200 px-5 py-3 text-sm font-semibold text-slate-500 sm:w-auto">
-              Gift link unavailable
+              Amazon link unavailable
             </span>
           )}
           <FavoriteButton giftId={recommendation.id} />
         </div>
+        <p className="mt-3 text-xs text-slate-500">Affiliate links may earn Ask2Gift a commission at no additional cost to you.</p>
       </div>
     </article>
   );
