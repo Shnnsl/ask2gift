@@ -23,6 +23,15 @@ export default function TermsPage() {
             </p>
           </article>
           <article className="surface p-6 sm:p-8">
+            <h2 className="text-2xl font-semibold">Age requirements and child information</h2>
+            <p className="mt-3 text-slate-600">
+              Ask2Gift is intended for users who are at least 13 years old and is not directed to children under 13. Ask2Gift does not knowingly collect personal information from children under 13. Parents or guardians may contact <a href="mailto:support@ask2gift.com" className="font-semibold text-spruce hover:text-ink">support@ask2gift.com</a> to request deletion of information submitted by a child.
+            </p>
+            <p className="mt-3 text-slate-600">
+              The gift quiz may accept broad recipient age ranges and interests, but users should not submit names, addresses, exact birth dates, school information, or other identifying information about children.
+            </p>
+          </article>
+          <article className="surface p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">Retailer responsibility</h2>
             <p className="mt-3 text-slate-600">
               Ask2Gift does not currently sell, fulfill, ship, or warranty products. External retailers control purchases, pricing, availability, shipping, returns, warranties, and customer support. Users should review retailer information independently before purchasing.
