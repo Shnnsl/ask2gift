@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-ink antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(245, 127, 108, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(33, 73, 61, 0.10), transparent 24%),
+    linear-gradient(180deg, #fffaf4 0%, #fff7ee 55%, #fffaf6 100%);
+}
+
+::selection {
+  background: rgba(245, 127, 108, 0.24);
+}
+
+@keyframes heroGlowPulse {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.34;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes floatSoft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes giftImageFade {
+  0%,
+  28% {
+    opacity: 1;
+  }
+
+  33%,
+  95% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight text-ink;
+  }
+
+  p {
+    @apply leading-7 text-slate-600;
+  }
+
+  a,
+  button,
+  input,
+  textarea {
+    @apply transition-all duration-200;
+  }
+}
+
+@layer components {
+  .container-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-space {
+    @apply py-14 sm:py-20;
+  }
+
+  .surface {
+    @apply rounded-4xl border border-white/80 bg-white/90 shadow-soft backdrop-blur;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-coral px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-coral/20 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-[#ee6d59] focus:outline-none focus:ring-2 focus:ring-coral/40 sm:px-6;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-ink shadow-sm hover:-translate-y-0.5 hover:scale-[1.03] hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 sm:px-6;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-medium tracking-[0.08em] text-slate-700;
+  }
+
+  .section-heading {
+    @apply text-4xl font-semibold leading-tight sm:text-5xl;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.26em] text-spruce/70;
+  }
+
+  .quiz-option {
+    @apply relative w-full rounded-[1.75rem] border border-slate-200 bg-white px-4 py-4 text-left text-sm font-medium text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-coral/45 hover:shadow-md sm:px-5 sm:py-5;
+  }
+
+  .quiz-option-active {
+    @apply border-coral text-ink ring-2 ring-coral/20 shadow-md shadow-coral/10;
+    background-image: linear-gradient(to bottom right, rgba(245, 127, 108, 0.12), rgba(255, 255, 255, 1));
+  }
+
+  .result-card {
+    @apply surface overflow-hidden border border-white/80;
+  }
+
+  .subtle-grid {
+    background-image:
+      linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .hero-glow {
+    @apply pointer-events-none absolute rounded-full blur-3xl motion-safe:animate-[heroGlowPulse_5.6s_ease-in-out_infinite];
+  }
+
+  .float-soft {
+    @apply motion-safe:animate-[floatSoft_4.6s_ease-in-out_infinite];
+  }
+
+  .float-soft-delayed {
+    @apply motion-safe:animate-[floatSoft_5.2s_ease-in-out_infinite];
+    animation-delay: 0.6s;
+  }
+
+  .card-hover {
+    @apply transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg;
+  }
+
+  .gift-image-fade {
+    @apply absolute inset-0 h-full w-full object-cover motion-safe:animate-[giftImageFade_18s_ease-in-out_infinite];
+  }
+}
