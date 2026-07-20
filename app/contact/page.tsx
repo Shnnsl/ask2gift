@@ -12,7 +12,7 @@ export default function ContactPage() {
       <PageIntro
         eyebrow="Contact"
         title="We would love to hear from you"
-        description="For questions, feedback, or support, contact support@ask2gift.com."
+        description="Get in touch with Ask2Gift for questions, feedback, or support."
       />
       <section className="section-space pt-0">
         <div className="container-shell">
@@ -30,7 +30,16 @@ export default function ContactPage() {
               <div className="rounded-[1.5rem] border border-slate-200/80 bg-white p-5">
                 <h2 className="text-lg font-semibold text-ink">Project updates</h2>
                 <p className="mt-2 text-sm text-slate-600">
-                  The public repository can also be used to follow product updates once it is published.
+                  Visit the{" "}
+                  <a
+                    href="https://github.com/Shnnsl/ask2gift"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-spruce hover:text-ink"
+                  >
+                    Ask2Gift GitHub repository
+                  </a>{" "}
+                  to follow project updates and development.
                 </p>
               </div>
             </div>
