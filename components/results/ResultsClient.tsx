@@ -7,9 +7,10 @@ import {
   getAmazonAssociateDisclosureText,
   shouldShowAmazonAssociateDisclosure
 } from "@/lib/affiliate";
-import { readResultsFeedback, readStoredQuizAnswers, writeResultsFeedback } from "@/lib/storage";
+import { readStoredQuizAnswers } from "@/lib/storage";
 import type { QuizAnswers, RecommendationResult } from "@/types/gift";
 import { RecommendationCard } from "@/components/results/RecommendationCard";
+import { ResultsFeedback } from "@/components/results/ResultsFeedback";
 
 export function ResultsClient() {
   const [answers, setAnswers] = useState<QuizAnswers | null>(null);
@@ -17,12 +18,10 @@ export function ResultsClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [usedFallback, setUsedFallback] = useState(false);
-  const [feedback, setFeedback] = useState<"yes" | "no" | "">("");
 
   useEffect(() => {
     const storedAnswers = readStoredQuizAnswers();
     setAnswers(storedAnswers);
-    setFeedback(readResultsFeedback() as "yes" | "no" | "");
 
     if (!storedAnswers) {
       setLoading(false);
@@ -206,34 +205,7 @@ export function ResultsClient() {
         ) : null}
 
         {uniqueResults.length > 0 && !error ? (
-          <div className="mt-8 surface max-w-3xl p-6 sm:p-8">
-            <h2 className="text-2xl font-semibold">Were these recommendations helpful?</h2>
-            <p className="mt-3 text-sm text-slate-600">
-              Your response is stored only in this browser to help us keep the public beta simple and privacy-friendly.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => {
-                  setFeedback("yes");
-                  writeResultsFeedback("yes");
-                }}
-                className={feedback === "yes" ? "button-primary w-full sm:w-auto" : "button-secondary w-full sm:w-auto"}
-              >
-                👍 Yes
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFeedback("no");
-                  writeResultsFeedback("no");
-                }}
-                className={feedback === "no" ? "button-primary w-full sm:w-auto" : "button-secondary w-full sm:w-auto"}
-              >
-                👎 No
-              </button>
-            </div>
-          </div>
+          <ResultsFeedback answers={answers} recommendations={uniqueResults} />
         ) : null}
       </div>
     </section>

@@ -20,28 +20,11 @@ export default function ContactPage() {
             <div className="rounded-[1.5rem] bg-slate-50 p-5 text-sm text-slate-600 sm:p-6">
               For questions, feedback, or support, contact <a href="mailto:support@ask2gift.com" className="font-semibold text-spruce hover:text-ink">support@ask2gift.com</a>.
             </div>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[1.5rem] border border-slate-200/80 bg-white p-5">
-                <h2 className="text-lg font-semibold text-ink">General support</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Use the support email for questions about the quiz, gift suggestions, favorites, or general Ask2Gift feedback.
-                </p>
-              </div>
-              <div className="rounded-[1.5rem] border border-slate-200/80 bg-white p-5">
-                <h2 className="text-lg font-semibold text-ink">Project updates</h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Visit the{" "}
-                  <a
-                    href="https://github.com/Shnnsl/ask2gift"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-spruce hover:text-ink"
-                  >
-                    Ask2Gift GitHub repository
-                  </a>{" "}
-                  to follow project updates and development.
-                </p>
-              </div>
+            <div className="mt-6 rounded-[1.5rem] border border-slate-200/80 bg-white p-5 sm:p-6">
+              <h2 className="text-lg font-semibold text-ink">General support</h2>
+              <p className="mt-2 max-w-2xl text-sm text-slate-600">
+                Use the support email for questions about the quiz, gift suggestions, favorites, or general Ask2Gift feedback.
+              </p>
             </div>
           </div>
         </div>

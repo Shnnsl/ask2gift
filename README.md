@@ -40,7 +40,7 @@ Guiding principle: Help people find the right gift.
 - Interest and style matching
 - Recommendation diversity
 - Local favorites
-- Local helpful-not-helpful feedback
+- Anonymous recommendation feedback
 - Responsive interface
 - About page
 - Contact page
@@ -73,6 +73,7 @@ The engine scores matching gifts, keeps strong matches first, and uses controlle
 - Tailwind CSS
 - Browser local storage and session storage
 - Next.js route handlers
+- Supabase JavaScript client
 
 ## Project Structure
 
@@ -83,6 +84,7 @@ data/
 docs/
 lib/
 public/
+supabase/
 tests/
 types/
 ```
@@ -142,7 +144,20 @@ npm test
 2. Answer the preference questions.
 3. Receive six recommendations.
 4. Save favorites locally in your browser.
-5. Give helpful or not-helpful feedback locally.
+5. Share anonymous feedback about the recommendation quality.
+
+## Supabase Feedback Setup
+
+1. Add the following variables to your local `.env.local` file:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+2. Run the SQL migration in `supabase/migrations/202607201620_create_feedback.sql` using the Supabase SQL Editor or the Supabase CLI.
+3. Add the same two public environment variables to your Vercel project settings.
+4. Redeploy after adding the Vercel environment variables.
+5. Verify that Row Level Security is enabled on `public.recommendation_feedback` and that no public `SELECT` policy exists.
+6. After testing feedback submissions, verify saved rows from the authenticated Supabase dashboard by opening the `recommendation_feedback` table in the Table Editor.
+
+Do not place real credentials in source control.
 
 ## Current Project Status
 
@@ -157,7 +172,7 @@ Ask2Gift is an active pre-launch public-beta project with a growing curated gift
 - Occasion-aware ranking
 - Recommendation diversity
 - Favorites
-- Local feedback
+- Anonymous feedback collection
 - Responsive interface
 - SEO support files
 

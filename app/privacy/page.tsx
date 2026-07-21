@@ -3,7 +3,7 @@ import { getPageTitle } from "@/lib/site";
 
 export const metadata = {
   title: getPageTitle("Privacy Policy"),
-  description: "Understand how Ask2Gift uses browser storage, Vercel Web Analytics, and how to reach support for privacy-related questions."
+  description: "Understand how Ask2Gift uses browser storage, anonymous feedback, Vercel Web Analytics, and how to reach support for privacy-related questions."
 };
 
 export default function PrivacyPage() {
@@ -19,7 +19,16 @@ export default function PrivacyPage() {
           <article className="surface p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">What Ask2Gift stores today</h2>
             <p className="mt-3 text-slate-600">
-              Ask2Gift currently works without accounts or a custom database. Favorites are stored in your browser using localStorage, helpful or not-helpful feedback is stored in localStorage, and recent quiz answers are stored in sessionStorage so your results can load in the same browser session.
+              Ask2Gift currently works without user accounts or profiles. Favorites are stored in your browser using localStorage, recent quiz answers are stored in sessionStorage so your results can load in the same browser session, and an anonymous browser session identifier may be stored in localStorage when feedback is submitted.
+            </p>
+          </article>
+          <article className="surface p-6 sm:p-8">
+            <h2 className="text-2xl font-semibold">Anonymous recommendation feedback</h2>
+            <p className="mt-3 text-slate-600">
+              If you choose to rate a results page, Ask2Gift may store whether the recommendations were helpful, any selected feedback reasons, an optional comment, non-identifying quiz and recommendation context, the current page path, and an anonymous browser session identifier. This feedback is used to improve recommendation quality.
+            </p>
+            <p className="mt-3 text-slate-600">
+              Ask2Gift does not require a name or email address for feedback. Please do not include personal or sensitive information in optional comments.
             </p>
           </article>
           <article className="surface p-6 sm:p-8">
@@ -40,7 +49,7 @@ export default function PrivacyPage() {
           <article className="surface p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">External links and browser control</h2>
             <p className="mt-3 text-slate-600">
-              Some gift links lead to external retailer or search pages outside Ask2Gift. Those third-party sites control their own privacy practices. Browser-stored data such as favorites, feedback, and quiz answers may also be cleared by you through normal browser settings.
+              Some gift links lead to external retailer or search pages outside Ask2Gift. Those third-party sites control their own privacy practices. Browser-stored data such as favorites and quiz answers may also be cleared by you through normal browser settings.
             </p>
           </article>
           <article className="surface p-6 sm:p-8">
@@ -52,7 +61,7 @@ export default function PrivacyPage() {
           <article className="surface p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">Future updates</h2>
             <p className="mt-3 text-slate-600">
-              If Ask2Gift later changes its analytics setup, direct contact handling, accounts, or database-backed features, this policy should be updated to reflect the real implementation at that time.
+              If Ask2Gift later changes its analytics setup, feedback data model, direct contact handling, accounts, or database-backed features, this policy should be updated to reflect the real implementation at that time.
             </p>
           </article>
         </div>
