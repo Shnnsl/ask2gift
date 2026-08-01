@@ -116,12 +116,112 @@ body {
   }
 
   .quiz-option {
-    @apply relative w-full rounded-[1.75rem] border border-slate-200 bg-white px-4 py-4 text-left text-sm font-medium text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-coral/45 hover:shadow-md sm:px-5 sm:py-5;
+    @apply relative min-h-12 w-full rounded-[1.5rem] border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 shadow-sm hover:-translate-y-0.5 hover:border-coral/45 hover:shadow-md sm:rounded-[1.75rem] sm:px-5 sm:py-5;
   }
 
   .quiz-option-active {
     @apply border-coral text-ink ring-2 ring-coral/20 shadow-md shadow-coral/10;
     background-image: linear-gradient(to bottom right, rgba(245, 127, 108, 0.12), rgba(255, 255, 255, 1));
+  }
+
+  .quiz-section {
+    min-height: calc(100vh - 4.75rem);
+    min-height: calc(100dvh - 4.75rem);
+    @apply py-4 pb-32;
+  }
+
+  .quiz-card {
+    @apply p-4;
+  }
+
+  .quiz-progress {
+    @apply p-3;
+  }
+
+  .quiz-progress-steps {
+    @apply hidden;
+  }
+
+  .quiz-question-block {
+    @apply mt-5;
+  }
+
+  .quiz-answer-region {
+    padding-bottom: 6.5rem;
+  }
+
+  .quiz-mobile-actions {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 50;
+    border-top: 1px solid rgb(226 232 240 / 0.95);
+    background: rgb(255 255 255 / 0.96);
+    box-shadow: 0 -12px 32px rgb(31 41 55 / 0.12);
+    padding: 0.75rem 1rem max(0.75rem, env(safe-area-inset-bottom));
+    backdrop-filter: blur(14px);
+  }
+
+  .quiz-mobile-actions-hidden {
+    @apply hidden;
+  }
+
+  .quiz-mobile-actions-inner {
+    @apply mx-auto grid max-w-3xl grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3;
+  }
+
+  .quiz-mobile-actions .button-primary,
+  .quiz-mobile-actions .button-secondary {
+    @apply min-h-12 w-full px-4;
+  }
+
+  @media (min-width: 640px) and (min-height: 600px) {
+    .quiz-section {
+      min-height: auto;
+      @apply py-20;
+    }
+
+    .quiz-card {
+      @apply p-8;
+    }
+
+    .quiz-progress {
+      @apply p-4;
+    }
+
+    .quiz-progress-steps {
+      @apply flex;
+    }
+
+    .quiz-question-block {
+      @apply mt-8;
+    }
+
+    .quiz-answer-region {
+      padding-bottom: 0;
+    }
+
+    .quiz-mobile-actions,
+    .quiz-mobile-actions-hidden {
+      position: static;
+      display: block;
+      max-width: 48rem;
+      border-top: 1px solid rgb(226 232 240);
+      background: transparent;
+      box-shadow: none;
+      margin: 1.75rem auto 0;
+      padding: 1.5rem 0 0;
+      backdrop-filter: none;
+    }
+
+    .quiz-mobile-actions-inner {
+      @apply flex max-w-none justify-between;
+    }
+
+    .quiz-mobile-actions .button-primary,
+    .quiz-mobile-actions .button-secondary {
+      @apply w-auto px-6;
+    }
   }
 
   .result-card {

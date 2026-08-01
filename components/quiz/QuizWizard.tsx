@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import {
@@ -100,16 +100,75 @@ export function QuizWizard() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswers>(emptyQuizAnswers);
+  const [validationMessage, setValidationMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isQuizCardVisible, setIsQuizCardVisible] = useState(true);
+  const quizCardRef = useRef<HTMLDivElement>(null);
+  const questionContainerRef = useRef<HTMLDivElement>(null);
+  const questionHeadingRef = useRef<HTMLHeadingElement>(null);
+  const validationMessageRef = useRef<HTMLParagraphElement>(null);
+  const previousStepRef = useRef(currentStep);
+  const stepTransitionRef = useRef(false);
+  const submissionStartedRef = useRef(false);
 
   const step = steps[currentStep];
   const canContinue = useMemo(() => isStepComplete(step, answers), [step, answers]);
   const isLastStep = currentStep === steps.length - 1;
+
+  useEffect(() => {
+    const animationFrame = window.requestAnimationFrame(() => {
+      const headingTop = questionHeadingRef.current?.getBoundingClientRect().top ?? 0;
+
+      if (window.scrollY > 100 && headingTop < 96) {
+        questionContainerRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
+      }
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, []);
+
+  useEffect(() => {
+    if (previousStepRef.current === currentStep) {
+      return;
+    }
+
+    previousStepRef.current = currentStep;
+    stepTransitionRef.current = false;
+
+    const animationFrame = window.requestAnimationFrame(() => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      questionHeadingRef.current?.focus({ preventScroll: true });
+      questionContainerRef.current?.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start"
+      });
+    });
+
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [currentStep]);
+
+  useEffect(() => {
+    const quizCard = quizCardRef.current;
+
+    if (!quizCard || typeof IntersectionObserver === "undefined") {
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsQuizCardVisible(entry.isIntersecting);
+    });
+
+    observer.observe(quizCard);
+    return () => observer.disconnect();
+  }, []);
 
   const updateSingleAnswer = (value: string) => {
     if (step.type !== "single") {
       return;
     }
 
+    setValidationMessage("");
     setAnswers((previous) => ({
       ...previous,
       [step.field]: value as SingleValue
@@ -121,6 +180,7 @@ export function QuizWizard() {
       return;
     }
 
+    setValidationMessage("");
     setAnswers((previous) => {
       const list = previous[step.field] as string[];
       const nextList = list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
@@ -132,28 +192,62 @@ export function QuizWizard() {
     });
   };
 
+  const goBack = () => {
+    if (currentStep === 0 || isSubmitting || stepTransitionRef.current) {
+      return;
+    }
+
+    stepTransitionRef.current = true;
+    setValidationMessage("");
+    setCurrentStep((value) => Math.max(0, value - 1));
+  };
+
   const goNext = () => {
+    if (isSubmitting || stepTransitionRef.current) {
+      return;
+    }
+
     if (!canContinue) {
+      setValidationMessage("Choose an answer before continuing.");
+      window.requestAnimationFrame(() => validationMessageRef.current?.focus());
       return;
     }
 
     if (isLastStep) {
+      if (submissionStartedRef.current) {
+        return;
+      }
+
+      submissionStartedRef.current = true;
+      stepTransitionRef.current = true;
+      setIsSubmitting(true);
       writeStoredQuizAnswers(answers);
       router.push("/results");
       return;
     }
 
+    stepTransitionRef.current = true;
+    setValidationMessage("");
     setCurrentStep((value) => value + 1);
   };
 
   return (
-    <section className="section-space">
+    <section className="quiz-section">
       <div className="container-shell">
-        <div className="mx-auto max-w-3xl surface p-5 sm:p-8">
+        <div ref={quizCardRef} className="quiz-card mx-auto max-w-3xl surface">
           <ProgressBar currentStep={currentStep} totalSteps={quizSteps.length} />
-          <div className="mt-8">
-            <p className="eyebrow">{quizSteps[currentStep]}</p>
-            <h1 className="mt-3 text-3xl font-semibold leading-tight sm:text-4xl">{step.title}</h1>
+          <div ref={questionContainerRef} className="quiz-question-block scroll-mt-24">
+            <p className="eyebrow">
+              <span className="sm:hidden">Step {currentStep + 1} of {steps.length} - </span>
+              {quizSteps[currentStep]}
+            </p>
+            <h1
+              ref={questionHeadingRef}
+              tabIndex={-1}
+              className="mt-2 text-3xl font-semibold leading-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40 focus-visible:ring-offset-4 sm:mt-3 sm:text-4xl"
+            >
+              {step.title}
+            </h1>
             <p className="mt-3 max-w-2xl text-base sm:text-lg">{step.description}</p>
             {step.type === "multi" ? (
               <p className="mt-3 text-sm text-slate-500">Select all that apply. You can choose more than one.</p>
@@ -162,10 +256,21 @@ export function QuizWizard() {
             ) : (
               <p className="mt-3 text-sm text-slate-500">Choose the closest fit to keep your results focused.</p>
             )}
+            {validationMessage ? (
+              <p
+                id="quiz-validation-message"
+                ref={validationMessageRef}
+                role="alert"
+                tabIndex={-1}
+                className="mt-4 rounded-2xl border border-coral/25 bg-coral/5 px-4 py-3 text-sm font-semibold text-coral focus:outline-none focus-visible:ring-2 focus-visible:ring-coral/40"
+              >
+                {validationMessage}
+              </p>
+            ) : null}
           </div>
 
           {step.type === "recipient-with-preference" ? (
-            <div className="mt-7 space-y-6">
+            <div className="quiz-answer-region mt-6 space-y-6 sm:mt-7">
               <div>
                 <p className="mb-3 text-sm font-semibold text-ink">Who the gift is for</p>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -176,19 +281,21 @@ export function QuizWizard() {
                       <button
                         key={option}
                         type="button"
+                        aria-pressed={isActive}
                         className={clsx("quiz-option", isActive && "quiz-option-active")}
-                        onClick={() =>
+                        onClick={() => {
+                          setValidationMessage("");
                           setAnswers((previous) => ({
                             ...previous,
                             recipientType: option
-                          }))
-                        }
+                          }));
+                        }}
                       >
-                        <span className="flex items-center justify-between gap-4">
-                          <span>{option}</span>
+                        <span className="flex min-w-0 items-center justify-between gap-4">
+                          <span className="min-w-0 break-words">{option}</span>
                           <span
                             className={clsx(
-                              "flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold",
+                              "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
                               isActive
                                 ? "border-coral bg-coral text-white"
                                 : "border-slate-200 bg-slate-50 text-slate-400"
@@ -213,19 +320,21 @@ export function QuizWizard() {
                       <button
                         key={option}
                         type="button"
+                        aria-pressed={isActive}
                         className={clsx("quiz-option", isActive && "quiz-option-active")}
-                        onClick={() =>
+                        onClick={() => {
+                          setValidationMessage("");
                           setAnswers((previous) => ({
                             ...previous,
                             gender: option
-                          }))
-                        }
+                          }));
+                        }}
                       >
-                        <span className="flex items-center justify-between gap-4">
-                          <span>{option}</span>
+                        <span className="flex min-w-0 items-center justify-between gap-4">
+                          <span className="min-w-0 break-words">{option}</span>
                           <span
                             className={clsx(
-                              "flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold",
+                              "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
                               isActive
                                 ? "border-coral bg-coral text-white"
                                 : "border-slate-200 bg-slate-50 text-slate-400"
@@ -241,7 +350,7 @@ export function QuizWizard() {
               </div>
             </div>
           ) : (
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="quiz-answer-region mt-6 grid gap-3 sm:mt-7 sm:grid-cols-2">
               {step.options.map((option) => {
                 const isActive =
                   step.type === "multi"
@@ -252,14 +361,15 @@ export function QuizWizard() {
                   <button
                     key={option}
                     type="button"
+                    aria-pressed={isActive}
                     className={clsx("quiz-option", isActive && "quiz-option-active")}
                     onClick={() => (step.type === "multi" ? updateMultiAnswer(option) : updateSingleAnswer(option))}
                   >
-                    <span className="flex items-center justify-between gap-4">
-                      <span>{option}</span>
+                    <span className="flex min-w-0 items-center justify-between gap-4">
+                      <span className="min-w-0 break-words">{option}</span>
                       <span
                         className={clsx(
-                          "flex h-7 w-7 items-center justify-center rounded-full border text-xs font-semibold",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
                           isActive
                             ? "border-coral bg-coral text-white"
                             : "border-slate-200 bg-slate-50 text-slate-400"
@@ -273,23 +383,35 @@ export function QuizWizard() {
               })}
             </div>
           )}
+        </div>
 
-          <div className="mt-7 flex flex-col gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-between">
+        <div
+          role="group"
+          aria-label="Quiz navigation"
+          aria-busy={isSubmitting}
+          className={clsx("quiz-mobile-actions", !isQuizCardVisible && "quiz-mobile-actions-hidden")}
+        >
+          <div className="quiz-mobile-actions-inner">
             <button
               type="button"
-              onClick={() => setCurrentStep((value) => Math.max(0, value - 1))}
-              className="button-secondary w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-              disabled={currentStep === 0}
+              onClick={goBack}
+              className="button-secondary disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={currentStep === 0 || isSubmitting}
             >
               Back
             </button>
             <button
               type="button"
               onClick={goNext}
-              className="button-primary w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-              disabled={!canContinue}
+              aria-disabled={isSubmitting}
+              aria-describedby={validationMessage ? "quiz-validation-message" : undefined}
+              className={clsx(
+                "button-primary",
+                !canContinue && !isSubmitting && "cursor-not-allowed opacity-60 shadow-none hover:translate-y-0 hover:scale-100 hover:bg-coral"
+              )}
+              disabled={isSubmitting}
             >
-              {isLastStep ? "Show Gift Ideas" : "Continue"}
+              {isSubmitting ? "Preparing results..." : isLastStep ? "Show Gift Ideas" : "Continue"}
             </button>
           </div>
         </div>

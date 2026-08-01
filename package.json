@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/affiliate.test.ts tests/feedback.test.ts"
+    "test": "node --experimental-strip-types --test tests/affiliate.test.ts tests/feedback.test.ts tests/quiz.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
