@@ -2,6 +2,17 @@
 
 Ask2Gift is a personalized gift recommendation engine that helps people discover thoughtful gift ideas based on the recipient, occasion, budget, interests, style, age, and other preferences.
 
+**Live site:** [ask2gift.com](https://ask2gift.com)
+
+## At a Glance
+
+- Responsive Next.js 14 (App Router) application written in TypeScript with Tailwind CSS, deployed on Vercel.
+- Multi-step quiz workflow with a progress bar, answer validation, and accessible mobile navigation.
+- Rule-based recommendation engine that returns six ranked gift ideas.
+- Favorites saved in the browser, and anonymous feedback stored in Supabase with Row Level Security enabled.
+- Vercel Analytics for usage insight.
+- 27 automated tests and TypeScript strict mode, checked with `npm test` and `npm run typecheck`.
+
 ## Project Overview
 
 Ask2Gift guides users through a structured quiz and returns six personalized gift recommendations. The current experience focuses on helping someone narrow down gift ideas before making a purchase elsewhere.
@@ -67,13 +78,15 @@ The engine scores matching gifts, keeps strong matches first, and uses controlle
 
 ## Technology Stack
 
-- Next.js App Router
-- React
-- TypeScript
+- Next.js 14 App Router
+- React 18
+- TypeScript (strict mode)
 - Tailwind CSS
 - Browser local storage and session storage
 - Next.js route handlers
-- Supabase JavaScript client
+- Supabase (PostgreSQL with Row Level Security) for anonymous feedback
+- Vercel for hosting and Vercel Analytics
+- Node.js built-in test runner
 
 ## Project Structure
 
@@ -138,6 +151,8 @@ npm run lint
 npm test
 ```
 
+The suite has 27 tests covering the affiliate-link helpers, feedback handling, and quiz navigation.
+
 ## Usage
 
 1. Start the gift quiz.
@@ -161,7 +176,7 @@ Do not place real credentials in source control.
 
 ## Current Project Status
 
-Ask2Gift is an active pre-launch public-beta project with a growing curated gift catalog and active recommendation-quality improvements.
+Ask2Gift is a deployed public-beta project with a growing curated gift catalog and ongoing recommendation-quality improvements.
 
 ## Roadmap
 
