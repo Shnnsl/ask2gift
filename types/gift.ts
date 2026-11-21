@@ -89,6 +89,8 @@ export interface GiftItem {
   ageRanges: AgeRange[];
   recipientTypes: RecipientType[];
   occasions: Occasion[];
+  /** Occasions this gift is a signature pick for (a subset of `occasions`). */
+  bestFor?: Occasion[];
   interests: Interest[];
   styles: GiftStyle[];
   fastDeliveryPossible: boolean;
