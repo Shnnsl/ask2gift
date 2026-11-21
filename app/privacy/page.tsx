@@ -3,7 +3,10 @@ import { getPageTitle } from "@/lib/site";
 
 export const metadata = {
   title: getPageTitle("Privacy Policy"),
-  description: "Understand how Ask2Gift uses browser storage, anonymous feedback, Vercel Web Analytics, and how to reach support for privacy-related questions."
+  description: "Understand how Ask2Gift uses browser storage, anonymous feedback, Vercel Web Analytics, and how to reach support for privacy-related questions.",
+  alternates: {
+    canonical: "/privacy"
+  }
 };
 
 export default function PrivacyPage() {

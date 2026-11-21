@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AffiliateDisclosure } from "@/components/shared/AffiliateDisclosure";
 
 const footerLinks = [
+  { href: "/gift-guides", label: "Gift Guides" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy Policy" },
@@ -9,14 +10,14 @@ const footerLinks = [
   { href: "/affiliate-disclosure", label: "Affiliate Disclosure" }
 ];
 
-const trustItems = ["Privacy Friendly", "No Account Required", "Save Your Favorites", "Public Beta"];
+const trustItems = ["Privacy Friendly", "No Account Required", "Save Your Favorites", "Free to Use"];
 
 export function Footer() {
   return (
     <footer className="border-t border-slate-200/80 bg-white/80">
       <div className="container-shell grid gap-8 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
         <div className="max-w-xl">
-          <p className="text-lg font-semibold text-ink">ask2gift</p>
+          <p className="text-lg font-semibold text-ink">Ask2Gift</p>
           <p className="mt-2 text-sm text-slate-600">Made to help gift-giving feel easier and more personal.</p>
           <div className="mt-5 flex flex-wrap gap-3">
             {footerLinks.map((link) => (
@@ -52,8 +53,8 @@ export function Footer() {
       </div>
       <div className="border-t border-slate-200/80">
         <div className="container-shell flex flex-col gap-2 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>&copy; 2026 Ask2Gift. All Rights Reserved.</span>
-          <span>Thoughtful gift ideas for public-beta exploration.</span>
+          <span>&copy; {new Date().getFullYear()} Ask2Gift. All rights reserved.</span>
+          <span>Thoughtful gift ideas for every occasion.</span>
         </div>
       </div>
     </footer>

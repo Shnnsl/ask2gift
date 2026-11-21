@@ -2,9 +2,10 @@ export const siteConfig = {
   name: "Ask2Gift",
   domain: "ask2gift.com",
   description:
-    "Discover thoughtful gift ideas personalized by recipient, occasion, budget, interests, style, and age with Ask2Gift.",
+    "Take a one-minute gift quiz and get personalized gift ideas for birthdays, holidays, anniversaries, weddings, and more, matched to the person, occasion, and budget.",
   url: "https://ask2gift.com",
-  title: "Ask2Gift - Personalized Gift Recommendation Engine"
+  title: "Ask2Gift | Gift Finder Quiz and Personalized Gift Ideas",
+  supportEmail: "support@ask2gift.com"
 };
 
 export function getPageTitle(title?: string) {

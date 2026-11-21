@@ -9,7 +9,10 @@ import {
 
 export const metadata = {
   title: getPageTitle("Affiliate Disclosure"),
-  description: "Learn how Ask2Gift uses Amazon affiliate links on quiz results and how commissions are disclosed."
+  description: "Learn how Ask2Gift uses Amazon affiliate links on quiz results and how commissions are disclosed.",
+  alternates: {
+    canonical: "/affiliate-disclosure"
+  }
 };
 
 export default function AffiliateDisclosurePage() {

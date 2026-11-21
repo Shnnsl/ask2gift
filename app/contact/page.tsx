@@ -3,7 +3,10 @@ import { getPageTitle } from "@/lib/site";
 
 export const metadata = {
   title: getPageTitle("Contact"),
-  description: "Contact Ask2Gift at support@ask2gift.com for questions, feedback, or support."
+  description: "Contact Ask2Gift at support@ask2gift.com for questions, feedback, or support.",
+  alternates: {
+    canonical: "/contact"
+  }
 };
 
 export default function ContactPage() {

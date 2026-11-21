@@ -3,7 +3,10 @@ import { getPageTitle } from "@/lib/site";
 
 export const metadata = {
   title: getPageTitle("Terms of Use"),
-  description: "Review the general terms that apply when using Ask2Gift recommendations and outbound retailer links."
+  description: "Review the general terms that apply when using Ask2Gift recommendations and outbound retailer links.",
+  alternates: {
+    canonical: "/terms"
+  }
 };
 
 export default function TermsPage() {

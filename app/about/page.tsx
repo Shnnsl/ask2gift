@@ -3,7 +3,10 @@ import { getPageTitle } from "@/lib/site";
 
 export const metadata = {
   title: getPageTitle("About"),
-  description: "Learn how ask2gift helps make gift shopping easier with guided personalized recommendations."
+  description: "Learn how ask2gift helps make gift shopping easier with guided personalized recommendations.",
+  alternates: {
+    canonical: "/about"
+  }
 };
 
 export default function AboutPage() {
@@ -23,9 +26,9 @@ export default function AboutPage() {
             </p>
           </article>
           <article className="surface p-6">
-            <h2 className="text-2xl font-semibold">Ready to grow</h2>
+            <h2 className="text-2xl font-semibold">Matched to the occasion</h2>
             <p className="mt-3 text-sm">
-              The app starts with local favorites and sample data, but the structure is ready for future accounts, database saving, and richer recommendation sources.
+              Every suggestion is chosen for the occasion first, then ranked by the interests, budget, and gift style you tell us about. No account is needed, and your favorites stay in your browser.
             </p>
           </article>
           <article className="surface p-6">

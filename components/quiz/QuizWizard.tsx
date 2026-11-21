@@ -12,6 +12,7 @@ import {
   RECIPIENT_OPTIONS,
   STYLE_OPTIONS,
   emptyQuizAnswers,
+  getQuizPresetFromParams,
   quizSteps
 } from "@/lib/quiz";
 import { writeStoredQuizAnswers } from "@/lib/storage";
@@ -47,7 +48,7 @@ type StepConfig =
 const steps: StepConfig[] = [
   {
     title: "Who are you buying for?",
-    description: "Choose who the gift is for and add a preference if you want us to gently guide the ranking.",
+    description: "Choose who the gift is for, then tell us whether to lean toward gifts for him or for her.",
     type: "recipient-with-preference"
   },
   {
@@ -87,6 +88,20 @@ const steps: StepConfig[] = [
   }
 ];
 
+const GENDER_LABELS: Record<string, string> = {
+  Male: "For him",
+  Female: "For her",
+  "Prefer not to say": "No preference"
+};
+
+function SelectedMark() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="h-3.5 w-3.5">
+      <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
+    </svg>
+  );
+}
+
 function isStepComplete(step: StepConfig, answers: QuizAnswers) {
   if (step.type === "recipient-with-preference") {
     return answers.recipientType !== "" && answers.gender !== "";
@@ -114,6 +129,15 @@ export function QuizWizard() {
   const step = steps[currentStep];
   const canContinue = useMemo(() => isStepComplete(step, answers), [step, answers]);
   const isLastStep = currentStep === steps.length - 1;
+
+  // Links such as /quiz?occasion=Christmas&recipient=Mom start with those answers chosen.
+  useEffect(() => {
+    const preset = getQuizPresetFromParams(new URLSearchParams(window.location.search));
+
+    if (Object.keys(preset).length > 0) {
+      setAnswers((previous) => ({ ...previous, ...preset }));
+    }
+  }, []);
 
   useEffect(() => {
     const animationFrame = window.requestAnimationFrame(() => {
@@ -252,7 +276,7 @@ export function QuizWizard() {
             {step.type === "multi" ? (
               <p className="mt-3 text-sm text-slate-500">Select all that apply. You can choose more than one.</p>
             ) : step.type === "recipient-with-preference" ? (
-              <p className="mt-3 text-sm text-slate-500">Pick one recipient and one preference to keep the results focused.</p>
+              <p className="mt-3 text-sm text-slate-500">Pick one recipient and one gift preference.</p>
             ) : (
               <p className="mt-3 text-sm text-slate-500">Choose the closest fit to keep your results focused.</p>
             )}
@@ -301,7 +325,7 @@ export function QuizWizard() {
                                 : "border-slate-200 bg-slate-50 text-slate-400"
                             )}
                           >
-                            {isActive ? "OK" : ""}
+                            {isActive ? <SelectedMark /> : null}
                           </span>
                         </span>
                       </button>
@@ -311,7 +335,7 @@ export function QuizWizard() {
               </div>
 
               <div>
-                <p className="mb-3 text-sm font-semibold text-ink">Preference</p>
+                <p className="mb-3 text-sm font-semibold text-ink">Gift preference</p>
                 <div className="grid gap-3 sm:grid-cols-3">
                   {GENDER_OPTIONS.map((option) => {
                     const isActive = answers.gender === option;
@@ -331,7 +355,7 @@ export function QuizWizard() {
                         }}
                       >
                         <span className="flex min-w-0 items-center justify-between gap-4">
-                          <span className="min-w-0 break-words">{option}</span>
+                          <span className="min-w-0 break-words">{GENDER_LABELS[option] ?? option}</span>
                           <span
                             className={clsx(
                               "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold",
@@ -340,7 +364,7 @@ export function QuizWizard() {
                                 : "border-slate-200 bg-slate-50 text-slate-400"
                             )}
                           >
-                            {isActive ? "OK" : ""}
+                            {isActive ? <SelectedMark /> : null}
                           </span>
                         </span>
                       </button>
@@ -375,7 +399,7 @@ export function QuizWizard() {
                             : "border-slate-200 bg-slate-50 text-slate-400"
                         )}
                       >
-                        {isActive ? "OK" : step.type === "multi" ? "+" : ""}
+                        {isActive ? <SelectedMark /> : step.type === "multi" ? "+" : null}
                       </span>
                     </span>
                   </button>

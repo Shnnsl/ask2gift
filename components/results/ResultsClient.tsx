@@ -19,6 +19,15 @@ export function ResultsClient() {
   const [error, setError] = useState("");
   const [usedFallback, setUsedFallback] = useState(false);
 
+  const answerSummary = answers
+    ? [
+        answers.recipientType ? `For: ${answers.recipientType}` : "",
+        answers.occasion,
+        answers.budget && answers.budget !== "No range" ? answers.budget : "",
+        answers.ageRange ? `Age ${answers.ageRange}` : ""
+      ].filter(Boolean)
+    : [];
+
   useEffect(() => {
     const storedAnswers = readStoredQuizAnswers();
     setAnswers(storedAnswers);
@@ -111,7 +120,20 @@ export function ResultsClient() {
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <span className="chip">{usedFallback ? "Closest matches" : "Personalized results"}</span>
-              <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">Gift ideas tailored to your quiz answers</h1>
+              <h1 className="mt-5 text-4xl font-semibold sm:text-5xl">
+                {answers.occasion && answers.occasion !== "Just Because"
+                  ? `Your ${answers.occasion} gift ideas`
+                  : "Your gift ideas"}
+              </h1>
+              {answerSummary.length > 0 ? (
+                <ul className="mt-4 flex flex-wrap gap-2" aria-label="Your quiz answers">
+                  {answerSummary.map((item) => (
+                    <li key={item} className="chip">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
               {usedFallback ? (
                 <>
                   <p className="mt-4 max-w-3xl text-lg">
@@ -123,7 +145,7 @@ export function ResultsClient() {
                 </>
               ) : (
                 <p className="mt-4 max-w-3xl text-lg">
-                  These suggestions are ranked using recipient match, gender preference, occasion, budget, gift style, interests, and age range.
+                  These suggestions are chosen for the occasion first, then ranked by interests, recipient, budget, gift style, and age range.
                 </p>
               )}
             </div>
@@ -143,25 +165,23 @@ export function ResultsClient() {
             </div>
           </div>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Link href="/quiz" className="button-secondary w-full sm:w-auto">
-              Retake quiz
-            </Link>
             <Link href="/quiz" className="button-primary w-full sm:w-auto">
-              Refine results
+              Retake the quiz
+            </Link>
+            <Link href="/gift-guides" className="button-secondary w-full sm:w-auto">
+              Browse gift guides
             </Link>
           </div>
         </div>
 
         {uniqueResults.length > 0 ? (
-          <div className="mt-8 rounded-[2rem] border border-coral/15 bg-white/90 p-5 shadow-soft sm:p-6">
-            <p className="text-sm font-semibold text-ink">
-              {shouldShowAmazonAssociateDisclosure() ? getAmazonAssociateDisclosureText() : getAffiliateDisclosureText()}
-            </p>
-            <p className="mt-2 text-sm text-slate-600">Affiliate links may earn Ask2Gift a commission at no additional cost to you.</p>
-          </div>
+          <p className="mt-8 rounded-[1.5rem] border border-slate-200/80 bg-white/90 px-5 py-4 text-sm text-slate-600">
+            {shouldShowAmazonAssociateDisclosure() ? getAmazonAssociateDisclosureText() : getAffiliateDisclosureText()}{" "}
+            Links to Amazon are paid links, at no extra cost to you.
+          </p>
         ) : null}
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        <div className="mt-6 grid gap-5 lg:grid-cols-2">
           {uniqueResults.map((recommendation, index) => (
             <RecommendationCard
               key={recommendation.id}
@@ -194,7 +214,7 @@ export function ResultsClient() {
           <div className="mt-8 surface max-w-3xl p-6 sm:p-8">
             <h2 className="text-2xl font-semibold">No strong matches yet</h2>
             <p className="mt-3">
-              Try broadening the interests or gift style selections to unlock more recommendations from the sample catalog.
+              Try broadening the interests or gift style selections to see more recommendations.
             </p>
             <div className="mt-6">
               <Link href="/quiz" className="button-primary w-full sm:w-auto">

@@ -211,3 +211,21 @@ export function getAmazonBudgetMessage(selectedBudget: BudgetRange | "", recomme
   return `Closest fit to your selected ${selectedBudget} budget.`;
 }
 
+
+const NO_QUIZ_ANSWERS: QuizAnswers = {
+  gender: "",
+  recipientType: "",
+  ageRange: "",
+  occasion: "",
+  budget: "",
+  interests: [],
+  styles: []
+};
+
+/** Amazon search link for a gift, optionally tuned by quiz answers or a guide's occasion. */
+export function getGiftAmazonUrl(
+  gift: Pick<RecommendationResult, "title">,
+  answers: Partial<QuizAnswers> = {}
+) {
+  return buildAmazonSearchUrl(buildAmazonSearchQuery(gift, { ...NO_QUIZ_ANSWERS, ...answers }));
+}
