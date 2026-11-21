@@ -8,10 +8,11 @@ Ask2Gift is a personalized gift recommendation engine that helps people discover
 
 - Responsive Next.js 14 (App Router) application written in TypeScript with Tailwind CSS, deployed on Vercel.
 - Multi-step quiz workflow with a progress bar, answer validation, and accessible mobile navigation.
-- Rule-based recommendation engine that returns six ranked gift ideas.
-- Favorites saved in the browser, and anonymous feedback stored in Supabase with Row Level Security enabled.
+- Rule-based recommendation engine that picks gifts for the chosen occasion first, then ranks six ideas by interests, recipient, budget, and style, from a catalog of 208 gifts.
+- 16 gift guide pages by occasion and recipient, with quiz links that start with answers already chosen.
+- Favorites saved in the browser, and anonymous feedback stored in Supabase with Row Level Security enabled. A daily Vercel cron keeps the free-plan Supabase project from pausing.
 - Vercel Analytics for usage insight.
-- 27 automated tests and TypeScript strict mode, checked with `npm test` and `npm run typecheck`.
+- 44 automated tests and TypeScript strict mode, checked with `npm test` and `npm run typecheck`.
 
 ## Project Overview
 
@@ -151,7 +152,7 @@ npm run lint
 npm test
 ```
 
-The suite has 27 tests covering the affiliate-link helpers, feedback handling, and quiz navigation.
+The suite has 44 tests covering the affiliate-link helpers, feedback handling, quiz navigation, the recommendation engine, and the gift guides.
 
 ## Usage
 
