@@ -25,9 +25,21 @@ Use the default Next.js build behavior unless Vercel shows something different:
 
 ## 4. Environment variables
 
-The current Ask2Gift app does not require environment variables to run.
+Add these in the Vercel project settings (Settings > Environment Variables), then redeploy:
 
-If affiliate configuration is added later, add the relevant variables in the Vercel project settings instead of hardcoding them in source control.
+| Variable | Needed for | Where to find it |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Anonymous results feedback | Supabase > Project Settings > API |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Anonymous results feedback | Supabase > Project Settings > API Keys |
+| `NEXT_PUBLIC_AMAZON_ASSOCIATE_TAG` | Optional. Overrides the default Amazon tag `ask2gift20-20` | Amazon Associates |
+| `CRON_SECRET` | Recommended. Protects the daily keep-alive route | Any long random string of letters and numbers |
+
+## 4a. Supabase keep-alive
+
+Supabase pauses free-plan projects after 7 days of low activity. `vercel.json` schedules a daily call to `/api/keep-alive`, which sends one small request to the database so the project stays awake. Nothing is read or written.
+
+- Check it works: open the Vercel project's **Cron Jobs** tab after deploying, or visit `/api/keep-alive` (this only works without a secret, so do it before adding `CRON_SECRET`). A healthy answer looks like `{"ok":true,"supabaseStatus":401,...}`; the 401 is expected because visitors may only add feedback, not read it.
+- If the project still pauses, restore it from the Supabase dashboard (**Resume project**) and check the Cron Jobs logs in Vercel.
 
 ## 5. Add the custom domains
 
